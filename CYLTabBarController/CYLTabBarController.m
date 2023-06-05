@@ -749,7 +749,11 @@ static void * const CYLTabImageViewDefaultOffsetContext = (void*)&CYLTabImageVie
 
 static inline UIWindow *getMainWindow(){
    UIWindow *window = nil;
-    window = UIApplication.sharedApplication.delegate.window;
+    
+    if ([UIApplication.sharedApplication.delegate respondsToSelector:@selector(window)]) {
+            //兼容新版项目结构，也就是AppDelegate没有window的情况
+        window = UIApplication.sharedApplication.delegate.window;
+    }
     if (!window) {
         if (@available(iOS 13.0, *))
            {
@@ -766,6 +770,8 @@ static inline UIWindow *getMainWindow(){
     }
     return window;
 }
+
+
 
 //TODO: 更新实现，多实例场景下进行栈操作，弹出最新一个。
 - (CYLTabBarController *)cyl_tabBarController {
